@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="gray">#E9E9E9</color>
+    <color name="list_divider">#ffdce0df</color>
+    <color name="image_divider">#A3A4A4</color>
+    <color name="dark_gray">#333333</color>
+    <color name="red">#ff0000</color>
+    <color name="title_bg_color">#E9E9E8</color>
+    <color name="bottom_bar_bg">#ffeaeaea</color>
+    <color name="answer_question_bg">#ffeaeaea</color>
+    <color name="discover_bg">#EAEAE9</color>
+    <color name="transparent">#00000000</color>
+    <color name="issue_bottom_bg">#5b5b5b</color>
+    <color name="unlogin_relayout_bg">#76a3a0</color>
+
+    <!-- 整个应用的背景色 -->
+    <color name="bg_color">#efeff4</color>
+    <color name="tab_bg_color">#FCFCFC</color>
+
+    <!-- 文字颜色：橙色 -->
+    <color name="text_orange">#FF7F00</color>
+
+    <!-- 文字颜色：浅灰 -->
+    <color name="text_gray">#999999</color>
+
+    <!-- 文字颜色：中灰 -->
+    <color name="text_mid_gray">#666666</color>
+
+    <!-- 文字颜色：深灰 -->
+    <color name="text_black">#333333</color>
+
+    <!-- 文字颜色：蓝色 -->
+    <color name="text_blue">#007aff</color>
+
+    <!-- listview 点击后的背景色 -->
+    <color name="list_item_gray">#999999</color>
+
+    <!-- 消息text颜色 -->
+    <color name="mes_text_gray">#979797</color>
+
+</resources>
