@@ -3,7 +3,8 @@ package com.tc.rscmo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tc.rscmo.chart.CPUChart;
+import com.tc.rscmo.chart.CpuChart;
+import com.tc.rscmo.thread.CpuRateThread;
 
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -12,6 +13,8 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
+	
+	public static final int UPDATE_CPU=1;
 
 	private Context context;
 	private ViewPager viewPager;
@@ -33,10 +38,16 @@ public class MainActivity extends ActionBarActivity {
 	private TextView cpuText, memText, tempText;
 	private View cpuPager, memPager, tempPager;
 
+	CpuChart cpuChart;			
+	
 	private int offset = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
 	private int bmpW;// 动画图片宽度
     private ImageView cursor;// 动画图片
+    
+    private CpuRateThread crthread;
+    
+    private Handler mHandler;
 
 
 	@Override
@@ -45,10 +56,27 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 
 		context = this;
-
+		
+		//init handler 
+		mHandler=new Handler(){
+			public void handleMessage (Message msg){
+				switch(msg.what){
+				case UPDATE_CPU:
+					cpuChart.repaint();
+					break;
+				}
+			}
+		};
+		
+		//init view
 		initImageView();
 		initViewPager();
 		initHeaderView();
+	
+		//start thread
+		crthread=new CpuRateThread(cpuChart);
+		Thread t1=new Thread(crthread);
+		t1.start();
 	}
 
 	// init three page view
@@ -70,13 +98,12 @@ public class MainActivity extends ActionBarActivity {
 		LinearLayout layout3 = (LinearLayout) tempPager
 				.findViewById(R.id.chart3);
 
-		CPUChart cChart = new CPUChart(context);
-		View ccView = cChart.getView();
+		cpuChart = new CpuChart(context,mHandler);
+		View ccView = cpuChart.getView();
 		if (ccView != null) {
 			layout1.addView(ccView, new LayoutParams(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT));
-
-			cChart.repaint();
+			cpuChart.repaint();
 		}
 
 		// BabyWeight weight = new BabyWeight(context);
@@ -100,6 +127,8 @@ public class MainActivity extends ActionBarActivity {
 		// }
 
 		viewList.add(cpuPager);
+		viewList.add(memPager);
+		viewList.add(tempPager);
 
 		viewPager.setAdapter(new MyPagerAdapter(viewList));
 		viewPager.setCurrentItem(0);
