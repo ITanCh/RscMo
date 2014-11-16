@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tc.rscmo.chart.CpuChart;
-import com.tc.rscmo.thread.CpuRateThread;
+import com.tc.rscmo.chart.MemChart;
+import com.tc.rscmo.thread.ProcThread;
 
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 public class MainActivity extends ActionBarActivity {
 	
 	public static final int UPDATE_CPU=1;
+	public static final int UPDATE_MEM=2;
 
 	private Context context;
 	private ViewPager viewPager;
@@ -38,14 +40,15 @@ public class MainActivity extends ActionBarActivity {
 	private TextView cpuText, memText, tempText;
 	private View cpuPager, memPager, tempPager;
 
-	CpuChart cpuChart;			
-	
+	private CpuChart cpuChart;			
+	private MemChart memChart;
+
 	private int offset = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
 	private int bmpW;// 动画图片宽度
     private ImageView cursor;// 动画图片
     
-    private CpuRateThread crthread;
+    private ProcThread crthread;
     
     private Handler mHandler;
 
@@ -64,6 +67,9 @@ public class MainActivity extends ActionBarActivity {
 				case UPDATE_CPU:
 					cpuChart.repaint();
 					break;
+				case UPDATE_MEM:
+					memChart.repaint();
+					break;
 				}
 			}
 		};
@@ -74,11 +80,18 @@ public class MainActivity extends ActionBarActivity {
 		initHeaderView();
 	
 		//start thread
-		crthread=new CpuRateThread(cpuChart);
+		crthread=new ProcThread(this);
 		Thread t1=new Thread(crthread);
 		t1.start();
 	}
 
+	public CpuChart getCpuChart() {
+		return cpuChart;
+	}
+	
+	public MemChart getMemChart() {
+		return memChart;
+	}
 	// init three page view
 	private void initViewPager() {
 
@@ -106,6 +119,12 @@ public class MainActivity extends ActionBarActivity {
 			cpuChart.repaint();
 		}
 
+		memChart =new MemChart(context,mHandler);
+		View mcView=memChart.getView();
+		if(mcView!=null){
+			layout2.addView(mcView,new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+			memChart.repaint();
+		}
 		// BabyWeight weight = new BabyWeight(context);
 		// View chartWeight = weight.getView();
 		// if(chartWeight != null) {
