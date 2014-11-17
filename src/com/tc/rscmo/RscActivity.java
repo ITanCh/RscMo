@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,10 +29,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity {
-	
-	public static final int UPDATE_CPU=1;
-	public static final int UPDATE_MEM=2;
+public class RscActivity extends ActionBarActivity {
+
+	public static final int UPDATE_CPU = 1;
+	public static final int UPDATE_MEM = 2;
 
 	private Context context;
 	private ViewPager viewPager;
@@ -40,17 +41,17 @@ public class MainActivity extends ActionBarActivity {
 	private TextView cpuText, memText, tempText;
 	private View cpuPager, memPager, tempPager;
 
-	private CpuChart cpuChart;			
+	private CpuChart cpuChart;
 	private MemChart memChart;
 
 	private int offset = 0;// 动画图片偏移量
 	private int currIndex = 0;// 当前页卡编号
 	private int bmpW;// 动画图片宽度
-    private ImageView cursor;// 动画图片
-    
-    private ProcThread crthread;
-    
-    private Handler mHandler;
+	private ImageView cursor;// 动画图片
+
+	private ProcThread crthread;
+
+	private Handler mHandler;
 
 
 	@Override
@@ -59,11 +60,11 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 
 		context = this;
-		
-		//init handler 
-		mHandler=new Handler(){
-			public void handleMessage (Message msg){
-				switch(msg.what){
+
+		// init handler
+		mHandler = new Handler() {
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
 				case UPDATE_CPU:
 					cpuChart.repaint();
 					break;
@@ -73,25 +74,26 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		};
-		
-		//init view
+
+		// init view
 		initImageView();
 		initViewPager();
 		initHeaderView();
-	
-		//start thread
-		crthread=new ProcThread(this);
-		Thread t1=new Thread(crthread);
+
+		// start thread
+		crthread = new ProcThread(this);
+		Thread t1 = new Thread(crthread);
 		t1.start();
 	}
 
 	public CpuChart getCpuChart() {
 		return cpuChart;
 	}
-	
+
 	public MemChart getMemChart() {
 		return memChart;
 	}
+
 	// init three page view
 	private void initViewPager() {
 
@@ -111,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
 		LinearLayout layout3 = (LinearLayout) tempPager
 				.findViewById(R.id.chart3);
 
-		cpuChart = new CpuChart(context,mHandler);
+		cpuChart = new CpuChart(context, mHandler);
 		View ccView = cpuChart.getView();
 		if (ccView != null) {
 			layout1.addView(ccView, new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -119,12 +121,14 @@ public class MainActivity extends ActionBarActivity {
 			cpuChart.repaint();
 		}
 
-		memChart =new MemChart(context,mHandler);
-		View mcView=memChart.getView();
-		if(mcView!=null){
-			layout2.addView(mcView,new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+		memChart = new MemChart(context, mHandler);
+		View mcView = memChart.getView();
+		if (mcView != null) {
+			layout2.addView(mcView, new LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT));
 			memChart.repaint();
 		}
+		
 		// BabyWeight weight = new BabyWeight(context);
 		// View chartWeight = weight.getView();
 		// if(chartWeight != null) {
@@ -207,7 +211,8 @@ public class MainActivity extends ActionBarActivity {
 	 * */
 	private void initImageView() {
 		cursor = (ImageView) findViewById(R.id.cursor);
-		bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.cursor).getWidth();// 获取图片宽度
+		bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.cursor)
+				.getWidth();// 获取图片宽度
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenW = dm.widthPixels;// 获取分辨率宽度
@@ -216,7 +221,7 @@ public class MainActivity extends ActionBarActivity {
 		matrix.postTranslate(offset, 0);
 		cursor.setImageMatrix(matrix);// 设置动画初始位置
 	}
-	
+
 	// init header tap
 	private void initHeaderView() {
 		cpuText = (TextView) findViewById(R.id.cpu_text);

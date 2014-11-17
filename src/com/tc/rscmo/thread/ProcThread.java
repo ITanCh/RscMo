@@ -7,7 +7,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 
-import com.tc.rscmo.MainActivity;
+import com.tc.rscmo.RscActivity;
 import com.tc.rscmo.chart.CpuChart;
 
 import com.tc.rscmo.chart.MemChart;
@@ -20,9 +20,9 @@ public class ProcThread implements Runnable {
 	private double rate = 0;
 	private CpuChart cpuChart;
 	private MemChart memChart;
-	private MainActivity mActivity;
+	private RscActivity mActivity;
 
-	public ProcThread(MainActivity activity) {
+	public ProcThread(RscActivity activity) {
 		// set model
 		mActivity = activity;
 		cpuChart = mActivity.getCpuChart();
@@ -35,8 +35,8 @@ public class ProcThread implements Runnable {
 	    ActivityManager am = (ActivityManager)mActivity.getSystemService(Context.ACTIVITY_SERVICE);  
         MemoryInfo mi = new MemoryInfo();  
         am.getMemoryInfo(mi);
-        long totalMem=mi.totalMem/(1024*1024);
-        
+        long totalMem=mi.totalMem/(1024*1024);		//M
+		//System.out.println("total mem:"+totalMem);
 		while (true) {
 			getCpuInfo();
 	        am.getMemoryInfo(mi);
@@ -60,7 +60,7 @@ public class ProcThread implements Runnable {
 					+ Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1500);
 			} catch (Exception e) {
 
 			}

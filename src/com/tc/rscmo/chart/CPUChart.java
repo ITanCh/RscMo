@@ -4,8 +4,7 @@ import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYSeriesRenderer;
 
-import com.tc.rscmo.MainActivity;
-import com.tc.rscmo.R;
+import com.tc.rscmo.RscActivity;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,7 +13,6 @@ import android.os.Handler;
 public class CpuChart extends XYChartBuilder {
 
 	private static final int POINT_COUNT=20;
-	private int bgColor;
 	private XYSeries series;
 	private double[] data;
 	private Handler mHandler;
@@ -24,8 +22,7 @@ public class CpuChart extends XYChartBuilder {
 		data=new double[POINT_COUNT];
 		for(int i=0;i<POINT_COUNT;i++)
 			data[i]=0;
-		
-		bgColor = context.getResources().getColor(R.color.text_orange);
+				
 		initData();
 		initRender();
 	}
@@ -53,15 +50,15 @@ public class CpuChart extends XYChartBuilder {
 		mRenderer.setMarginsColor(Color.argb(00, 11, 11, 11));
 
 		// X轴颜色
-		mRenderer.setAxesColor(bgColor);
+		mRenderer.setAxesColor(ChartColor.GREEN);
 		// 曲线图标题
 		mRenderer.setChartTitle("CPU Load");
-		mRenderer.setChartTitleTextSize(25);
+		mRenderer.setChartTitleTextSize(30);
 		// 在scrollview中可以滑动
 		//mRenderer.setInScroll(true);
 		// 坐标颜色，文字大小
-		mRenderer.setLabelsColor(bgColor);
-		mRenderer.setLabelsTextSize(20);
+		mRenderer.setLabelsColor(ChartColor.BLUE2);
+		mRenderer.setLabelsTextSize(25);
 		
 		// 图例字号
 		//mRenderer.setLegendTextSize(40);
@@ -69,7 +66,7 @@ public class CpuChart extends XYChartBuilder {
 		mRenderer.setShowLegend(false);
 		
 		// 设置外边框（上下左右）
-		mRenderer.setMargins(new int[] { 0, 30, 0, 15 });
+		//mRenderer.setMargins(new int[] { 0, 30, 0, 15 });
 		// 设置是否允许拖动（貌似无效，应该是必须有scrollview才行）
 		mRenderer.setPanEnabled(true);
 		// 设置是否允许放大和缩小，必须通过缩放按钮才能生效
@@ -88,8 +85,8 @@ public class CpuChart extends XYChartBuilder {
 		mRenderer.setYLabelsPadding(15);
 		// mRenderer.setXLabelsPadding(20);
 		// X轴、Y轴的文字颜色
-		mRenderer.setYLabelsColor(0, bgColor);
-		mRenderer.setXLabelsColor(bgColor);
+		mRenderer.setYLabelsColor(0,ChartColor.BLUE2);
+		mRenderer.setXLabelsColor(ChartColor.BLUE2);
 
 		// create a new renderer for the new series
 		XYSeriesRenderer renderer = new XYSeriesRenderer();
@@ -100,7 +97,7 @@ public class CpuChart extends XYChartBuilder {
 		renderer.setDisplayChartValues(true);
 		renderer.setDisplayChartValuesDistance(10);
 		renderer.setChartValuesTextSize(17);
-		
+		renderer.setColor(ChartColor.RED);
 		// enable the chart click events
 		mRenderer.setClickEnabled(true);
 		mRenderer.setSelectableBuffer(10);
@@ -114,7 +111,7 @@ public class CpuChart extends XYChartBuilder {
 		data[0]=newdata;
 		updateSeries();
 		//model update view
-		mHandler.obtainMessage(MainActivity.UPDATE_CPU).sendToTarget();
+		mHandler.obtainMessage(RscActivity.UPDATE_CPU).sendToTarget();
 	}
 
 }
