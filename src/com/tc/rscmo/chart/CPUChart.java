@@ -1,11 +1,12 @@
 package com.tc.rscmo.chart;
 
+import java.util.ArrayList;
+
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import com.tc.rscmo.RscActivity;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
@@ -13,16 +14,27 @@ import android.os.Handler;
 public class CpuChart extends XYChartBuilder {
 
 	private static final int POINT_COUNT=20;
+	public static final int LIST_COUNT=5;
 	private XYSeries series;
 	private double[] data;
 	private Handler mHandler;
+	private ArrayList<String> nameList;
+	private ArrayList<String> rateList;
+	
 	public CpuChart(Context context,Handler h) {
 		super(context);
 		mHandler=h;
 		data=new double[POINT_COUNT];
+		
+		nameList=new ArrayList<String>();
+		rateList=new ArrayList<String>();
+		
 		for(int i=0;i<POINT_COUNT;i++)
 			data[i]=0;
-				
+		for(int i=0;i<LIST_COUNT;i++){
+			nameList.add(i+"");
+			rateList.add(i+"");
+		}
 		initData();
 		initRender();
 	}
@@ -112,6 +124,25 @@ public class CpuChart extends XYChartBuilder {
 		updateSeries();
 		//model update view
 		mHandler.obtainMessage(RscActivity.UPDATE_CPU).sendToTarget();
+	}
+	
+	public void clearName(){
+		nameList.clear();
+		rateList.clear();
+	}
+	
+	public void addName(String name,String rate){
+		nameList.add(name);
+		rateList.add(rate);
+	}
+	
+	public ArrayList<String> getNameList(){
+		ArrayList<String> array=new ArrayList<String>();
+		for(int i=0;i<rateList.size();i++){
+				String name_rate=rateList.get(i)+"	\t"+nameList.get(i);
+				array.add(name_rate);
+		}
+		return array;
 	}
 
 }

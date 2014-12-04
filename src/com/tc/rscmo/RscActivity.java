@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.tc.rscmo.chart.CpuChart;
 import com.tc.rscmo.chart.MemChart;
-import com.tc.rscmo.thread.ProcThread;
+import com.tc.rscmo.thread.UpdateThread;
 
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -25,8 +25,10 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class RscActivity extends ActionBarActivity {
@@ -40,7 +42,9 @@ public class RscActivity extends ActionBarActivity {
 
 	private TextView cpuText, memText, tempText;
 	private View cpuPager, memPager, tempPager;
-
+	private ListView cpuList,memList;
+	private ArrayAdapter<String> cpuAdapter,memAdapter;
+	
 	private CpuChart cpuChart;
 	private MemChart memChart;
 
@@ -49,7 +53,7 @@ public class RscActivity extends ActionBarActivity {
 	private int bmpW;// 动画图片宽度
 	private ImageView cursor;// 动画图片
 
-	private ProcThread crthread;
+	private UpdateThread crthread;
 
 	private Handler mHandler;
 
@@ -67,6 +71,9 @@ public class RscActivity extends ActionBarActivity {
 				switch (msg.what) {
 				case UPDATE_CPU:
 					cpuChart.repaint();
+					cpuAdapter.clear();
+					cpuAdapter.addAll(cpuChart.getNameList());
+					cpuAdapter.notifyDataSetChanged();
 					break;
 				case UPDATE_MEM:
 					memChart.repaint();
@@ -81,7 +88,7 @@ public class RscActivity extends ActionBarActivity {
 		initHeaderView();
 
 		// start thread
-		crthread = new ProcThread(this);
+		crthread = new UpdateThread(this);
 		Thread t1 = new Thread(crthread);
 		t1.start();
 	}
@@ -113,12 +120,17 @@ public class RscActivity extends ActionBarActivity {
 		LinearLayout layout3 = (LinearLayout) tempPager
 				.findViewById(R.id.chart3);
 
+		cpuList=(ListView)cpuPager.findViewById(R.id.list1);
+		memList=(ListView)cpuPager.findViewById(R.id.list2);
+		
 		cpuChart = new CpuChart(context, mHandler);
 		View ccView = cpuChart.getView();
 		if (ccView != null) {
 			layout1.addView(ccView, new LayoutParams(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT));
 			cpuChart.repaint();
+			cpuAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpuChart.getNameList());
+			cpuList.setAdapter(cpuAdapter);
 		}
 
 		memChart = new MemChart(context, mHandler);
